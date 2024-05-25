@@ -12,7 +12,7 @@ public class MazeGUI extends JFrame {
     private MazeGenerator generated;
     private Cell[][] maze;
 
-    public MazeGUI() throws Exception{
+    public MazeGUI(){
         setTitle("Maze Solver");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(515, 650);
@@ -30,15 +30,33 @@ public class MazeGUI extends JFrame {
         };
         mazePanel.setPreferredSize(new Dimension(500, 500));
 
-        // Create the control panel
+        // Create control panel
+        JPanel controlPanel = createControlPanel();
+
+        JPanel contentPane = new JPanel(new BorderLayout(10, 10));
+        contentPane.add(mazePanel, BorderLayout.CENTER);
+        contentPane.add(controlPanel, BorderLayout.SOUTH);
+        setContentPane(contentPane);
+    }
+
+    // Methods
+    private JPanel createControlPanel() {
         JPanel controlPanel = new JPanel(new GridLayout(3, 2, 10, 10));
+
         String[] dimensions = {"5", "10", "15", "20", "25", "30", "40", "50"};
         dimensionComboBox = new JComboBox<>(dimensions);
+
         generateButton = new JButton("Generate Maze");
+        generateButton.addActionListener(e -> generateMaze());
+
         String[] solvers = {"Dijkstra's Algorithm", "Recursive Solver", "BFS", "DFS"};
         solverComboBox = new JComboBox<>(solvers);
+
         solveButton = new JButton("Solve Maze");
+        solveButton.addActionListener(e -> solveMaze());
+
         resetButton = new JButton("Reset");
+        resetButton.addActionListener(e -> resetMaze());
 
         controlPanel.add(new JLabel("Maze Dimension:"));
         controlPanel.add(dimensionComboBox);
@@ -47,31 +65,10 @@ public class MazeGUI extends JFrame {
         controlPanel.add(solverComboBox);
         controlPanel.add(solveButton);
 
-        // Add listeners to the buttons
-        generateButton.addActionListener(e -> {
-            try {
-                generateMaze();
-            } catch (Exception e1) {
-                e1.printStackTrace();
-            }
-        });
-        solveButton.addActionListener(e -> {
-            try {
-                solveMaze();
-            } catch (Exception e1) {
-                e1.printStackTrace();
-            }
-        });
-        resetButton.addActionListener(e -> resetMaze());
-
-        // Layout the components
-        JPanel contentPane = new JPanel(new BorderLayout(10, 10));
-        contentPane.add(mazePanel, BorderLayout.CENTER);
-        contentPane.add(controlPanel, BorderLayout.SOUTH);
-        setContentPane(contentPane);
+        return controlPanel;
     }
 
-    private void generateMaze() throws Exception{
+    private void generateMaze(){
         int dims = Integer.parseInt((String) dimensionComboBox.getSelectedItem());
         MazeGenerator.MAZE_SIZE = dims;
         Cell.CELL_DIMS = 500 / dims;
@@ -80,27 +77,16 @@ public class MazeGUI extends JFrame {
         mazePanel.repaint();
     }
 
-    private void solveMaze() throws Exception{
+    private void solveMaze(){
         long startTime = System.nanoTime();
         int selectedIndex = solverComboBox.getSelectedIndex();
-        switch (selectedIndex) {
-            case 0 -> {
-                DijkstraSolve solver1 = new DijkstraSolve(maze);
-                maze = solver1.maze;
-            }
-            case 1 -> {
-                RecursiveSolver solver2 = new RecursiveSolver(maze);
-                maze = solver2.maze;
-            }
-            case 2 -> {
-                BFSSolver solver3 = new BFSSolver(maze);
-                maze = solver3.maze;
-            }
-            case 3 -> {
-                DFSSolver solver4 = new DFSSolver(maze);
-                maze = solver4.maze;
-            }
-        }
+        maze = switch (selectedIndex) {
+            case 0 -> new DijkstraSolve(maze).maze;
+            case 1 -> new RecursiveSolver(maze).maze;
+            case 2 -> new BFSSolver(maze).maze;
+            case 3 -> new DFSSolver(maze).maze;
+            default -> throw new IllegalArgumentException("Unexpected value: " + selectedIndex);
+        };
         long endTime = System.nanoTime();
         System.out.println("Solving maze took: " + (endTime - startTime) / 1000000 + " ms");
         mazePanel.repaint();
