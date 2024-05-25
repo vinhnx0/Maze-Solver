@@ -117,18 +117,8 @@ public class MazeGUI extends JFrame {
                 cell.drawCell(g);
             }
         }
-        for (int x = 0; x < maze.length; x++) {
-            for (int y = 0; y < maze[0].length; y++) {
-                // Color the start and end cells
-                if (x == 0 && y == 0) {
-                    g.setColor(Color.GREEN);
-                    g.fillRect(x * Cell.CELL_DIMS, y * Cell.CELL_DIMS, Cell.CELL_DIMS, Cell.CELL_DIMS);
-                } else if (x == maze.length - 1 && y == maze[0].length - 1) {
-                    g.setColor(Color.RED);
-                    g.fillRect(x * Cell.CELL_DIMS, y * Cell.CELL_DIMS, Cell.CELL_DIMS, Cell.CELL_DIMS);
-                }
-            }
-        }
+        maze[0][0].setCellColor(g, Color.GREEN); // starting cell is green
+        maze[maze.length -1][maze.length - 1].setCellColor(g, Color.RED); // end cell is red
     }
 
     public static void main(String[] args){
