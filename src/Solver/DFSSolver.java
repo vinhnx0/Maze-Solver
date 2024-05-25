@@ -10,10 +10,14 @@ public class DFSSolver {
     public Cell[][] maze; // generated maze to pass into the solver
     Stack<Cell> cellStack; // stack used for DFS solution.
     
-    public DFSSolver(Cell[][] maze) throws Exception { // constructor
+    public DFSSolver(Cell[][] maze){ // constructor
         this.maze = maze;
         cellStack = new Stack<>();
-        solve();
+        try {
+            solve();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     
     public void solve() throws Exception {

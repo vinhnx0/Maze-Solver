@@ -8,10 +8,14 @@ public class BFSSolver {
     Queue<Cell> queue; // queue used for BFS
     public Cell[][] maze; // maze that we will pass into the solver
 
-    public BFSSolver(Cell[][] maze) throws Exception { // constructor throws exception for list implementation
+    public BFSSolver(Cell[][] maze){ // constructor throws exception for list implementation
         this.maze = maze;
         queue = new Queue<>();
-        solve();
+        try {
+            solve();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void solve() throws Exception {

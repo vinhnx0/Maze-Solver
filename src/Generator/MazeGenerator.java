@@ -15,10 +15,14 @@ public class MazeGenerator {
     int rows = MAZE_SIZE;
 
 
-    public MazeGenerator() throws Exception {
+    public MazeGenerator() {
         maze = new Cell[cols][rows];
         initializeCells();
-        RecursiveBacktrackGenerate();
+        try {
+            RecursiveBacktrackGenerate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void initializeCells(){ // initialize the x and y coords of each cell relative to their position in the 2d array
