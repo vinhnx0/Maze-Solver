@@ -49,7 +49,7 @@ public class MazeGUI extends JFrame {
         generateButton = new JButton("Generate Maze");
         generateButton.addActionListener(e -> generateMaze());
 
-        String[] solvers = {"Dijkstra's Algorithm", "Recursive Solver", "BFS", "DFS"};
+        String[] solvers = {"Dijkstra's Algorithm", "BFS", "DFS"};
         solverComboBox = new JComboBox<>(solvers);
 
         solveButton = new JButton("Solve Maze");
@@ -82,9 +82,8 @@ public class MazeGUI extends JFrame {
         int selectedIndex = solverComboBox.getSelectedIndex();
         maze = switch (selectedIndex) {
             case 0 -> new DijkstraSolve(maze).maze;
-            case 1 -> new RecursiveSolver(maze).maze;
-            case 2 -> new BFSSolver(maze).maze;
-            case 3 -> new DFSSolver(maze).maze;
+            case 1 -> new BFSSolver(maze).maze;
+            case 2 -> new DFSSolver(maze).maze;
             default -> throw new IllegalArgumentException("Unexpected value: " + selectedIndex);
         };
         long endTime = System.nanoTime();
